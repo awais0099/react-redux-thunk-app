@@ -8,3 +8,4 @@ export const store = configureStore({
 });
 
 export * from './thunks/fetchUsers.js';
+export * from './thunks/addUser.js';

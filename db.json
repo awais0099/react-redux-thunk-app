@@ -1,5 +1,22 @@
 {
-  "users": [{"id": 1, "name": "Maya"}],
+  "users": [
+    {
+      "id": 1,
+      "name": "Maya"
+    },
+    {
+      "name": "Orville Goldner",
+      "id": 2
+    },
+    {
+      "name": "Lee Hirthe",
+      "id": 3
+    },
+    {
+      "name": "Cora Fahey",
+      "id": 4
+    }
+  ],
   "albums": [],
   "photos": []
 }
