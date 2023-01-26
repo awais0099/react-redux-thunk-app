@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { fetchUsers } from '../thunks/fetchUsers.js';
 import { addUser } from '../thunks/addUser.js';
+import { removeUser } from '../thunks/removeUser.js';
 
 const usersSlice = createSlice({
   name: 'users',
@@ -25,21 +26,34 @@ const usersSlice = createSlice({
   		state.error = action.error;
   	}); // 'users/fetch/pending'
 
-	builder.addCase(addUser.pending, (state, action) => {
-		state.isLoading = true;
-	});
+   /* add user*/
+  	builder.addCase(addUser.pending, (state, action) => {
+  		state.isLoading = true;
+  	});
 
-	builder.addCase(addUser.fulfilled, (state, action) => {
-		state.isLoading = false;
-		state.data.push(action.payload);
-	});
+  	builder.addCase(addUser.fulfilled, (state, action) => {
+  		state.isLoading = false;
+  		state.data.push(action.payload);
+  	});
 
-	builder.addCase(addUser.rejected, (state, action) => {
-		state.isLoading = false;
-		state.error = action.error;
-	});
+  	builder.addCase(addUser.rejected, (state, action) => {
+  		state.isLoading = false;
+  		state.error = action.error;
+  	});
 
-	
+    /* remove user*/
+    builder.addCase(removeUser.pending, (state, action) => {
+      state.isLoading = true;
+    })
+
+    builder.addCase(removeUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+    })
+
+    builder.addCase(removeUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.error;
+    });
 
   }
 });

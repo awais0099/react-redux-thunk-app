@@ -1,56 +1,54 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { fetchUsers, addUser } from '../store/';
 import Skeleton from './Skeleton';
 import Button from './Button';
 
+import {useThunk} from '../hooks/use-thunk.js';
+
+
 function UsersList() {
-	const dispatch = useDispatch();
-	const [isLoadingUsers, setIsLoadingUsers] = useState(false);
-	const [loadingUsersError, setLoadingUsersError] = useState(false);
+	const [doFetchUsers, isLoadingUsers, loadingUsersError] = useThunk(fetchUsers);
+	const [doCreateUser, isCreatingUser, creatingUserError] = useThunk(addUser);
+	// const dispatch = useDispatch();
 
 	const {data} = useSelector((state) => {
 		return state.users;
 	});
 
 	useEffect(() => {
-		dispatch(fetchUsers())
-		.unwrap()
-		.then(() => {
-
-		})
-		.catch(() => {
-
-		})
-	}, [dispatch]);
-
-	if (isLoadingUsers) {
-		return <Skeleton times={6} className="h-10 w-full" />
-	}
-
-	if (loadingUsersError) {
-		return <div>Error fetching data...</div>
-	}
+		doFetchUsers();
+	}, [doFetchUsers]);
 
 	const handleUserAdd = () => {
-		dispatch(addUser());
+		doCreateUser();
 	}
 
-	const renderedUsers = data.map((user) => {
+	let content;
+
+	if (isLoadingUsers) {
+		content = <Skeleton times={6} className="h-10 w-full" />
+	} else if (loadingUsersError) {
+		content = <div>Error fetching data...</div>
+	} else {
+		content = data.map((user) => {
 		return (
-			<div key={user.id} className='mb-2 border rounded'>
-				<div className='flex p-2 justify-between items-center cursor-pointer'>{user.name}</div>
-			</div>
-		);
-	});
+				<div key={user.id} className='mb-2 border rounded'>
+					<div className='flex p-2 justify-between items-center cursor-pointer'>{user.name}</div>
+				</div>
+			);
+		});
+
+	}
 
 	return (
 		<div>
 			<div className='flex flex-row justify-between items-center m-3'>
 				<h1>Users</h1>
-				<Button onClick={handleUserAdd}>+ Add User</Button>
+				<Button onClick={handleUserAdd} loading={isCreatingUser}>+ Add User</Button>
+				{creatingUserError && 'Error creating user...'} 
 			</div>
-			{renderedUsers}
+			{content}
 		</div>
 	)
 
